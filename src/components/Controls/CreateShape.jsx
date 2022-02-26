@@ -27,6 +27,10 @@ const CreateShape = () => {
         canvasUtils.draw(currentObjectInfo.tagColor);
     }
 
+    const handleClickDelete = () => {
+        canvasUtils.deleteObject();
+    }
+
     return (
         <div className="column">
             <TextInputModal show={isOpen} onClose={() => toggleTextInputModal()} onSaveChanges={(text) => handleTextInput(text)} />
@@ -44,6 +48,11 @@ const CreateShape = () => {
                 <button className="button is-primary tooltip" data-tooltip="Add Text" onClick={() => toggleTextInputModal()}>
                     {' '}
                     add text
+                    <i className="icon-text" />
+                </button>
+                <button className="button is-primary tooltip" data-tooltip="Add Text" onClick={() => handleClickDelete()}>
+                    {' '}
+                    xóa
                     <i className="icon-text" />
                 </button>
                 <button className="button is-primary tooltip" data-tooltip="Add Text" onClick={() => handleClickStopDraw()}>

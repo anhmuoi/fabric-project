@@ -23,11 +23,8 @@ export function setCanvasSize(width = 500, height = 500) {
     canvas.setHeight(height);
     canvas.isDrawingMode = true;
 }
-export function changeObjectName(name) {
-    if (canvas.getActiveObject() != null) {
-        canvas.getActiveObject().set('name', name);
-    }
-    return 0;
+export function deleteObject() {
+    canvas.remove(canvas.getActiveObject());
 }
 
 export function addShape(shape, fill, tagColor) {

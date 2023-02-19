@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     objectInfo: {
         opacity: 1,
-        fill: '#f44336',
+        fill: 'rgba(0,0,0,0)',
         tagColor: '#f44336',
     },
 };

@@ -4,7 +4,6 @@ import uniqid from 'uniqid';
 
 let canvas = null;
 
-
 export function initializeCanvas() {
     canvas = window._canvas = new fabric.Canvas('mockup_canvas');
     canvas.on('object:selected');
@@ -44,6 +43,8 @@ export function addShape(shape, fill, tagColor) {
                     tagColor: tagColor,
                     flipX: false,
                     flipY: false,
+                    stroke: 'black',
+                    strokeWidth: 1,
                 })
             );
             break;
@@ -61,6 +62,8 @@ export function addShape(shape, fill, tagColor) {
                     tagColor: tagColor,
                     flipX: false,
                     flipY: false,
+                    stroke: 'black',
+                    strokeWidth: 1,
                 })
             );
             break;

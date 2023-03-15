@@ -111,6 +111,152 @@ export function changeOpacity(opacity) {
     return 0;
 }
 
+const initializeFilter = (activeObj) => {
+    if (activeObj) {
+        activeObj.filters = [];
+        activeObj.filters.push(new fabric.Image.filters.Blur({ blur: 0 }));
+        activeObj.filters[0].value = 0;
+        activeObj.filters.push(new fabric.Image.filters.Saturation({ saturation: 0 }));
+        activeObj.filters[1].value = 0;
+        activeObj.filters.push(new fabric.Image.filters.HueRotation({ rotation: 0 }));
+        activeObj.filters[2].value = 0;
+        activeObj.filters.push(
+            new fabric.Image.filters.Brightness({
+                brightness: 0,
+            })
+        );
+        activeObj.filters[3].value = 0;
+        activeObj.filters.push(new fabric.Image.filters.Contrast({ contrast: 0 }));
+        activeObj.filters[4].value = 0;
+        // activeObj.filters.push(new fabric.Image.filters.Grayscale({ grayscale: 0 }));
+        // activeObj.filters[5].value = 0;
+
+        activeObj.applyFilters();
+    }
+};
+
+const createFilter = (activeObj, type) => {
+    if (activeObj && activeObj.type === 'image') {
+        activeObj.filters = [];
+        if (type !== 'figure') {
+            initializeFilter(activeObj);
+            activeObj.filterPercentage = 100;
+        }
+    }
+    canvas.requestRenderAll();
+};
+
+const getPercentage = (originalValue, percentage) => {
+    const value = Math.round((originalValue * percentage) / 100);
+    if (!value) {
+        return 0;
+    } else {
+        return value;
+    }
+};
+
+export const setFilter = (name, num, max) => {
+    var activeObj = canvas.getActiveObject();
+    console.log(activeObj.filters.length);
+    if (activeObj.filters.length === 0) {
+        createFilter(activeObj);
+        return;
+    }
+
+    if (activeObj) {
+        const percentage = 100;
+        switch (name) {
+            case 'blur':
+                // activeObj.filters.splice(10, 1);
+                activeObj.filters[0].blur = getPercentage(Number(num), percentage) / max;
+                activeObj.filters[0].value = num;
+                break;
+            case 'saturate':
+                activeObj.filters[1].saturation = getPercentage(Number(num), percentage) / max;
+                activeObj.filters[1].value = num;
+                break;
+            case 'huerotate':
+                activeObj.filters[2].rotation = getPercentage(Number(num), percentage) / max;
+                activeObj.filters[2].value = num;
+                break;
+            case 'brightness':
+                activeObj.filters[3].brightness = getPercentage(Number(num), percentage) / max;
+                activeObj.filters[3].value = num;
+                break;
+            case 'contrast':
+                activeObj.filters[4].contrast = getPercentage(Number(num), percentage) / max;
+                activeObj.filters[4].value = num;
+                break;
+
+            // case 'grayscale':
+            //     activeObj.filters[5].grayscale = getPercentage(Number(num), percentage) / max;
+            //     activeObj.filters[5].value = num;
+            //     break;
+            default:
+                break;
+        }
+        activeObj.applyFilters();
+        canvas.requestRenderAll();
+    }
+};
+
+export function applyFilter(filterType, value, unit = '') {
+    console.log(canvas.getActiveObject());
+    if (canvas.getActiveObject() != null) {
+        let filter;
+        switch (filterType) {
+            case 'opacity':
+                filter = new fabric.Image.filters.Alpha({
+                    alpha: value + unit,
+                });
+                break;
+            case 'blur':
+                filter = new fabric.Image.filters.Blur({
+                    blur: value + unit,
+                });
+                break;
+            case 'brightness':
+                filter = new fabric.Image.filters.Brightness({
+                    brightness: value + unit,
+                });
+                break;
+            case 'contrast':
+                filter = new fabric.Image.filters.Contrast({
+                    contrast: value + unit,
+                });
+                break;
+
+            case 'grayscale':
+                filter = new fabric.Image.filters.Grayscale({
+                    grayscale: value + unit,
+                });
+                break;
+            case 'sepia':
+                filter = new fabric.Image.filters.Sepia({
+                    sepia: value + unit,
+                });
+                break;
+            case 'huerotate':
+                filter = new fabric.Image.filters.HueRotation({
+                    rotation: value + unit,
+                });
+                break;
+            default:
+                return;
+        }
+
+        console.log(filter[filterType]);
+        let filterList = canvas.getActiveObject().filters.filter((item) => !item.hasOwnProperty(filterType));
+
+        filterList.push(filter);
+        console.log(filterList);
+
+        canvas.getActiveObject().filters = filterList;
+        canvas.getActiveObject().applyFilters();
+        canvas.renderAll();
+    }
+}
+
 export function addImage(dataURL) {
     fabric.Image.fromURL(dataURL, (img) => {
         // set width for image
@@ -126,35 +272,35 @@ export function generateImage() {
     });
 }
 
-export function sendObjectBackwards() {
-    if (canvas.getActiveObject() != null) {
-        canvas.sendBackwards(canvas.getActiveObject());
-        canvas.deactivateAll().renderAll();
-    }
-    return 0;
-}
+// export function sendObjectBackwards() {
+//     if (canvas.getActiveObject() != null) {
+//         canvas.sendBackwards(canvas.getActiveObject());
+//         canvas.deactivateAll().renderAll();
+//     }
+//     return 0;
+// }
 
-export function sendObjectForwards() {
-    if (canvas.getActiveObject() != null) {
-        canvas.bringForward(canvas.getActiveObject());
-        canvas.deactivateAll().renderAll();
-    }
-}
-export function bringObjectFront() {
-    if (canvas.getActiveObject() != null) {
-        canvas.bringToFront(canvas.getActiveObject());
-        canvas.deactivateAll().renderAll();
-    }
-    return 0;
-}
+// export function sendObjectForwards() {
+//     if (canvas.getActiveObject() != null) {
+//         canvas.bringForward(canvas.getActiveObject());
+//         canvas.deactivateAll().renderAll();
+//     }
+// }
+// export function bringObjectFront() {
+//     if (canvas.getActiveObject() != null) {
+//         canvas.bringToFront(canvas.getActiveObject());
+//         canvas.deactivateAll().renderAll();
+//     }
+//     return 0;
+// }
 
-export function sendObjectBack() {
-    if (canvas.getActiveObject() != null) {
-        canvas.sendToBack(canvas.getActiveObject());
-        canvas.deactivateAll().renderAll();
-    }
-    return 0;
-}
+// export function sendObjectBack() {
+//     if (canvas.getActiveObject() != null) {
+//         canvas.sendToBack(canvas.getActiveObject());
+//         canvas.deactivateAll().renderAll();
+//     }
+//     return 0;
+// }
 
 export function rotateObject(value) {
     const activeObject = canvas.getActiveObject();
